@@ -1,0 +1,19 @@
+# Ajustes de pnpm 12. Antes vivían en el campo "pnpm" de package.json, que pnpm
+# ya no lee.
+#
+# allowBuilds decide qué paquetes pueden ejecutar scripts de instalación
+# (preinstall, install, postinstall). Es el principal vector de ataque de cadena
+# de suministro: un paquete comprometido ejecutaría código arbitrario en la
+# máquina con solo instalarlo. npm los ejecuta en silencio; pnpm exige decidir
+# uno por uno y falla la instalación mientras queden pendientes.
+#
+# unrs-resolver es el resolvedor nativo que arrastra eslint-config-next. Está
+# denegado tras comprobar que lint, typecheck y build pasan sin él. Si alguna
+# herramienta deja de funcionar, cámbiese a true ese paquete concreto y sólo
+# ese, documentando por qué.
+#
+# Escrito por `pnpm approve-builds "!unrs-resolver"`. No editar a mano las
+# claves antiguas onlyBuiltDependencies / ignoredBuiltDependencies: pnpm 12 las
+# sigue leyendo en `pnpm config list` pero ya no las usa para esta decisión.
+allowBuilds:
+  unrs-resolver: false

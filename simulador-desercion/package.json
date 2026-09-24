@@ -2,16 +2,24 @@
   "name": "simulador-desercion",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@12.6.0",
+  "engines": {
+    "node": ">=20.9.0",
+    "pnpm": ">=12"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "audit": "pnpm audit --audit-level moderate",
+    "verify": "pnpm run typecheck && pnpm run lint && pnpm run build"
   },
   "dependencies": {
     "next": "16.3.6",
-    "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react": "19.3.0",
+    "react-dom": "19.3.0"
   },
   "devDependencies": {
     "@types/node": "^20",

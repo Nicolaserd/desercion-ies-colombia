@@ -165,7 +165,15 @@ export default function Simulador() {
             no se rechaza en {ficha.aniosSinRechazo} de 15 años
           </b>{" "}
           (Anderson–Darling por Monte Carlo, p mediano{" "}
-          <b>{numero(ficha.pMediano, 3)}</b>).
+          <b>{numero(ficha.pMediano, 3)}</b>). Ninguna familia describe los quince:
+          incluso la mejor falla en 3, más de lo que el azar explica.
+        </p>
+        <p>
+          El λ realizado que aparece arriba no coincide exactamente con el pedido.
+          No es un error: la cópula gaussiana preserva las marginales de forma
+          exacta, y a cambio la dependencia que entrega se desvía hasta unas dos
+          centésimas. Por eso se muestran los dos valores en lugar de asumir que
+          coinciden.
         </p>
         <p>
           Advertencia sobre los datos: {AJUSTES.auditoria.atricion.iesQueSalen}{" "}

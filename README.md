@@ -18,12 +18,15 @@ normal: es leptocúrtico, con colas más pesadas. La lognormal se rechaza por
 Anderson–Darling **en los quince años**, con el p-valor en el mínimo alcanzable.
 Lo mismo la gamma y la Weibull.
 
-**La familia que ajusta es la log-Laplace.** Probadas año por año sobre cortes
-transversales —donde cada institución aparece una sola vez y no hay medidas
+**La familia que menos se rechaza es la log-Laplace.** Probadas año por año sobre
+cortes transversales —donde cada institución aparece una sola vez y no hay medidas
 repetidas—, la log-Laplace no se rechaza en **12 de 15 años** (p mediano 0,150),
 la Burr XII en 7 y la log-logística en 5. El resultado se confirma fuera de
 muestra partiendo las instituciones en dos mitades: p = 0,464 en la mitad que no
 participó en la elección.
+
+Dicho con precisión: **falla en 3 años, más de lo que el azar explica** (binomial
+p = 0,036). Es la mejor de las trece probadas, no la correcta.
 
 **No es una ley de potencias.** La Pareto pura queda penúltima de 13 familias
 (ΔAIC = 181), la cola empírica cubre menos de una década cuando el criterio de
@@ -32,10 +35,16 @@ una moda interior en torno al 9% que una potencia monótona no puede producir.
 El exponente que un ajuste de cola recupera (α̂ = 3,13) no es evidencia nueva:
 reproduce la forma ya estimada de la log-logística (c = 3,11).
 
-**No es una cadena de Markov.** La propiedad de Markov se rechaza en el
-contraste de orden 2 contra orden 1 (p ≈ 1e-75). A cinco años la cadena predice
-que el 31% de las IES seguirá en el quintil más alto; el dato es 56%. El error
-tiene una causa: la cadena olvida qué institución es.
+**No es una cadena de Markov.** A cinco años la cadena predice que el 31% de las
+IES seguirá en el quintil más alto; el dato es 56%. El error tiene una causa: la
+cadena olvida qué institución es.
+
+La evidencia que sostiene esto es la **forma de la autocorrelación**, medida sobre
+la variable continua: a seis años vale 0,574, cuando un AR(1) predice 0,119. El
+contraste de orden 2 contra orden 1 sobre quintiles también rechaza, pero es
+prueba débil: un AR(1) puro —markoviano por construcción— también se rechaza al
+discretizarlo (p = 0,040). El G² de los datos reales, 457, está muy por encima de
+ese artefacto, 104.
 
 **Es un proceso de componentes de varianza.** La autocorrelación intra-IES no
 decae geométricamente: a cinco años vale 0,53, no el 0,17 que exigiría un
@@ -88,6 +97,14 @@ ambas causas.
    la atrición selectiva matiza el descenso de la parte 1. Incluye validación
    fuera de muestra, intervalos de confianza por bootstrap, sensibilidad a los
    extremos excluidos y descomposición de varianza tipo II.
+6. **Segunda ronda** — ataca lo que quedó en pie, incluida la conclusión nueva.
+   No revierte nada: acota el alcance de la ganadora, demuestra que el contraste
+   de Markov sobre quintiles tiene sesgo hacia el rechazo y que la evidencia real
+   es la forma de la autocorrelación, y valida el simulador contra los datos
+   (KS de dos muestras, p = 0,725).
+
+Que la segunda ronda no revierta nada es la señal de que el estudio convergió: la
+primera encontró errores de diseño, la segunda solo límites de precisión.
 
 ### Los simuladores
 
@@ -108,11 +125,22 @@ IES × años, la matriz de transición entre quintiles, la autocorrelación por
 rezago frente a lo que exigiría Markov, un Q-Q contra los datos reales y la
 tabla completa de estadísticas.
 
+Requiere **pnpm** (no npm: la versión está fijada en `packageManager` y Corepack
+la activa sola). Los scripts de instalación de las dependencias están denegados
+por omisión, que es la razón principal para usar pnpm aquí.
+
 ```bash
+corepack enable
 cd simulador-desercion
-npm install
-npm run dev
+pnpm install
+pnpm dev
+
+pnpm run verify                    # tipos + lint + build
+pnpm audit --audit-level moderate  # vulnerabilidades conocidas
 ```
+
+Las reglas completas de gestor de paquetes, versiones y seguridad están en
+[`CLAUDE.md`](CLAUDE.md).
 
 **`simulador_desercion.html`** es anterior y más modesto: simula **un solo corte
 transversal** —N instituciones en un año— sin estructura temporal ni parámetros
