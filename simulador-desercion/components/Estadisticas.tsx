@@ -2,7 +2,7 @@
 
 import { AJUSTES } from "@/lib/ajustes";
 import { numero, porcentaje } from "@/lib/escala";
-import { porEncima, type Panel } from "@/lib/simular";
+import { porEncima, resumir, type Panel, type ResumenSerie } from "@/lib/simular";
 
 interface Props {
   panel: Panel;
@@ -27,23 +27,30 @@ export default function Estadisticas({ panel, umbral, cambiarUmbral }: Props) {
   // Y cuántas lo superan siempre.
   const siempre = panel.matriz.filter((f) => f.every((x) => x > umbral)).length;
 
-  const filas: [string, string, string, string][] = [
-    ["Media", porcentaje(sUlt.media, 2), porcentaje(sTodo.media, 2), "promedio aritmético"],
-    ["Mediana", porcentaje(sUlt.mediana, 2), porcentaje(sTodo.mediana, 2), "el valor del medio"],
-    ["Desv. estándar", porcentaje(sUlt.sd, 2), porcentaje(sTodo.sd, 2), "dispersión absoluta"],
-    ["Coef. de variación", numero(sUlt.cv), numero(sTodo.cv), "dispersión relativa a la media"],
-    ["RIC (p75 − p25)", porcentaje(sUlt.ric, 2), porcentaje(sTodo.ric, 2), "ancho del 50% central"],
-    ["Rango p90 − p10", porcentaje(sUlt.p90_p10, 2), porcentaje(sTodo.p90_p10, 2), "ancho del 80% central"],
-    ["Asimetría", numero(sUlt.asimetria, 2), numero(sTodo.asimetria, 2), "0 = simétrica"],
-    ["Curtosis (exceso)", numero(sUlt.curtosis, 2), numero(sTodo.curtosis, 2), "0 = normal"],
-    ["Mínimo", porcentaje(sUlt.min, 2), porcentaje(sTodo.min, 2), "—"],
-    ["Percentil 10", porcentaje(sUlt.p10, 2), porcentaje(sTodo.p10, 2), "—"],
-    ["Percentil 25", porcentaje(sUlt.p25, 2), porcentaje(sTodo.p25, 2), "—"],
-    ["Percentil 75", porcentaje(sUlt.p75, 2), porcentaje(sTodo.p75, 2), "—"],
-    ["Percentil 90", porcentaje(sUlt.p90, 2), porcentaje(sTodo.p90, 2), "—"],
-    ["Percentil 95", porcentaje(sUlt.p95, 2), porcentaje(sTodo.p95, 2), "—"],
-    ["Percentil 99", porcentaje(sUlt.p99, 2), porcentaje(sTodo.p99, 2), "—"],
-    ["Máximo", porcentaje(sUlt.max, 2), porcentaje(sTodo.max, 2), "—"],
+  const sReal: ResumenSerie | null = real ? resumir(real) : null;
+
+  const pc = (f: (r: ResumenSerie) => number) => (r: ResumenSerie | null) =>
+    r ? porcentaje(f(r), 2) : "—";
+  const nu = (f: (r: ResumenSerie) => number) => (r: ResumenSerie | null) =>
+    r ? numero(f(r)) : "—";
+
+  const filas: [string, (r: ResumenSerie | null) => string, string][] = [
+    ["Media", pc((r) => r.media), "promedio aritmético"],
+    ["Mediana", pc((r) => r.mediana), "el valor del medio"],
+    ["Desv. estándar", pc((r) => r.sd), "dispersión absoluta"],
+    ["Coef. de variación", nu((r) => r.cv), "dispersión relativa a la media"],
+    ["RIC (p75 − p25)", pc((r) => r.ric), "ancho del 50% central"],
+    ["Rango p90 − p10", pc((r) => r.p90_p10), "ancho del 80% central"],
+    ["Asimetría", nu((r) => r.asimetria), "0 = simétrica"],
+    ["Curtosis (exceso)", nu((r) => r.curtosis), "0 = normal"],
+    ["Mínimo", pc((r) => r.min), "—"],
+    ["Percentil 10", pc((r) => r.p10), "—"],
+    ["Percentil 25", pc((r) => r.p25), "—"],
+    ["Percentil 75", pc((r) => r.p75), "—"],
+    ["Percentil 90", pc((r) => r.p90), "—"],
+    ["Percentil 95", pc((r) => r.p95), "—"],
+    ["Percentil 99", pc((r) => r.p99), "—"],
+    ["Máximo", pc((r) => r.max), "—"],
   ];
 
   return (
@@ -111,18 +118,20 @@ export default function Estadisticas({ panel, umbral, cambiarUmbral }: Props) {
         <table>
           <thead>
             <tr>
-              <th>Medida</th>
-              <th>{ultimo}</th>
+              <th className="izq">Medida</th>
+              <th>Simulado {ultimo}</th>
+              <th className="col-real">Real {ultimo}</th>
               <th>Panel completo</th>
               <th className="izq">Qué mide</th>
             </tr>
           </thead>
           <tbody>
-            {filas.map(([nombre, a, b, nota]) => (
+            {filas.map(([nombre, fmt, nota]) => (
               <tr key={nombre}>
                 <td className="izq">{nombre}</td>
-                <td>{a}</td>
-                <td>{b}</td>
+                <td>{fmt(sUlt)}</td>
+                <td className="col-real">{fmt(sReal)}</td>
+                <td>{fmt(sTodo)}</td>
                 <td className="izq tenue">{nota}</td>
               </tr>
             ))}

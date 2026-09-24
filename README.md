@@ -48,8 +48,8 @@ residuo idiosincrásico el 38,6%.
 |---|---|
 | `DISPERSION_DESERCION.ipynb` | El análisis completo, en cuatro partes, con las figuras ya renderizadas |
 | `SPADIES_ALL.xlsx` | Datos de origen: tasa de deserción anual por IES, 2010–2024 |
-| `simulador-desercion/` | Simulador en Next.js 16 + React 19 + TypeScript |
-| `simulador_desercion.html` | Versión de una sola página, sin dependencias: se abre con doble clic |
+| `simulador-desercion/` | Simulador de paneles en Next.js 16 + React 19 + TypeScript |
+| `simulador_desercion.html` | Simulador de un solo corte transversal, en un archivo sin dependencias |
 
 ### El cuaderno
 
@@ -67,25 +67,35 @@ residuo idiosincrásico el 38,6%.
    varianza, matriz de transición entre quintiles, y patrones de movilidad y
    trayectoria.
 
-### El simulador
+### Los simuladores
 
-Genera un panel de instituciones × años reproducible por semilla. Cada año
-conserva su distribución marginal ajustada; la dependencia entre los años de una
-misma institución usa una cópula gaussiana con la estructura de componentes
-validada en la parte 4:
+Son dos, con alcances distintos.
+
+**`simulador-desercion/`** genera un **panel** de instituciones × años,
+reproducible por semilla. Cada año conserva su distribución marginal ajustada; la
+dependencia entre los años de una misma institución usa una cópula gaussiana con
+la estructura de componentes validada en la parte 4:
 
 ```
 w_it = √λ·aᵢ + √(1−λ)·eᵢₜ ,   eᵢₜ = ρ·eᵢ,ₜ₋₁ + √(1−ρ²)·zᵢₜ
 ```
 
 Parámetros ajustables: número de IES, número de años, semilla, familia de
-distribución, λ, ρ, truncamiento en 100% y umbral de alerta.
+distribución, λ, ρ, truncamiento en 100% y umbral de alerta. Muestra la matriz
+IES × años, la matriz de transición entre quintiles, la autocorrelación por
+rezago frente a lo que exigiría Markov, un Q-Q contra los datos reales y la
+tabla completa de estadísticas.
 
 ```bash
 cd simulador-desercion
 npm install
 npm run dev
 ```
+
+**`simulador_desercion.html`** es anterior y más modesto: simula **un solo corte
+transversal** —N instituciones en un año— sin estructura temporal ni parámetros
+de dependencia. Se abre con doble clic, sin instalar nada. Sirve para explorar la
+forma de la distribución; para todo lo demás, use el de Next.js.
 
 ---
 

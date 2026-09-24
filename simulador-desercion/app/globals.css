@@ -573,6 +573,13 @@ td.tenue {
   font-family: var(--sans), sans-serif;
   font-size: 12px;
 }
+th.col-real,
+td.col-real {
+  color: var(--naranja);
+}
+th.col-real {
+  color: var(--tinta-3);
+}
 tbody tr:last-child td {
   border-bottom: none;
 }

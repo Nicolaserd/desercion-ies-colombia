@@ -9,7 +9,7 @@ import Memoria from "./Memoria";
 import Estadisticas from "./Estadisticas";
 import { simularPanel } from "@/lib/simular";
 import { AJUSTES } from "@/lib/ajustes";
-import { BANDAS, numero, porcentaje } from "@/lib/escala";
+import { BANDAS, numero } from "@/lib/escala";
 
 const INICIAL: Estado = {
   nIes: 289,
@@ -45,26 +45,7 @@ export default function Simulador() {
 
   const ficha = AJUSTES.familias.find((f) => f.clave === estado.familia)!;
   const ultimo = panel.anios[panel.anios.length - 1];
-  const refReal = AJUSTES.anios[String(ultimo)]?.resumen;
-  const ultimoResumen = panel.porAnio[panel.porAnio.length - 1];
   const proyectados = panel.proyectado.filter(Boolean).length;
-
-  const tarjetas: [string, string, string | null][] = [
-    [
-      "Mediana",
-      porcentaje(ultimoResumen.mediana),
-      refReal ? porcentaje(refReal.mediana) : null,
-    ],
-    ["RIC (p75−p25)", porcentaje(ultimoResumen.ric), refReal ? porcentaje(refReal.ric) : null],
-    [
-      "Rango p90−p10",
-      porcentaje(ultimoResumen.p90_p10),
-      refReal ? porcentaje(refReal.p90_p10) : null,
-    ],
-    ["Desv. estándar", porcentaje(ultimoResumen.sd), refReal ? porcentaje(refReal.sd) : null],
-    ["CV", numero(ultimoResumen.cv), refReal ? numero(refReal.cv) : null],
-    ["Máximo", porcentaje(ultimoResumen.max), refReal ? porcentaje(refReal.max) : null],
-  ];
 
   return (
     <>
@@ -156,32 +137,6 @@ export default function Simulador() {
           <ComparacionQQ panel={panel} />
         </section>
       </div>
-
-      <section className="panel">
-        <div className="panel-cabeza">
-          <h2>Dispersión en {ultimo}</h2>
-          <p>
-            En azul el dato simulado; debajo, el valor real de ese año en SPADIES.
-          </p>
-        </div>
-        <div className="tarjetas">
-          {tarjetas.map(([clave, valor, referencia]) => (
-            <div className="tarjeta" key={clave}>
-              <span className="clave">{clave}</span>
-              <span className="valor">{valor}</span>
-              <span className="contraste">
-                {referencia ? (
-                  <>
-                    real <b>{referencia}</b>
-                  </>
-                ) : (
-                  "año proyectado"
-                )}
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
 
       <section className="panel">
         <div className="panel-cabeza">

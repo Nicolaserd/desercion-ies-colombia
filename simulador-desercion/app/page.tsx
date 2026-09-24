@@ -14,9 +14,10 @@ export default function Page() {
       <Simulador />
       <footer className="pie">
         Parámetros estimados por máxima verosimilitud sobre 289 IES colombianas
-        (SPADIES, 3.930 observaciones institución-año). La log-logística es la
-        única familia de 2 parámetros que el contraste de Anderson–Darling no
-        rechaza.
+        (SPADIES, 3.930 observaciones institución-año). La log-logística encabeza
+        el ranking por AIC entre 13 familias y no es rechazada por Anderson–Darling
+        (p = 0,140); la lognormal, con los mismos dos parámetros, sí lo es
+        (p = 0,006).
       </footer>
     </main>
   );
