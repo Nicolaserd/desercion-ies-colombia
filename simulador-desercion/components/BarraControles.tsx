@@ -70,8 +70,7 @@ export default function BarraControles({
         >
           {AJUSTES.familias.map((f) => (
             <option key={f.clave} value={f.clave}>
-              {f.nombre}
-              {f.estado === "rechazada" ? " — rechazada" : ""}
+              {f.nombre} — {f.aniosSinRechazo}/15 años sin rechazo
             </option>
           ))}
         </select>

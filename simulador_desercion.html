@@ -199,10 +199,10 @@ tbody tr:last-child td{border-bottom:none}
       <div class="grupo">
         <label for="familia">Distribución</label>
         <select id="familia">
-          <option value="fisk" selected>Log-logística (Fisk) · mejor ajuste</option>
-          <option value="burr12">Burr XII · ΔAIC 0,2</option>
-          <option value="loglaplace">Log-Laplace · ΔAIC 3,8</option>
-          <option value="lognorm">Lognormal · rechazada (p=0,006)</option>
+          <option value="loglaplace" selected>Log-Laplace · 12 de 15 años sin rechazo</option>
+          <option value="burr12">Burr XII · 7 de 15</option>
+          <option value="fisk">Log-logística (Fisk) · 5 de 15</option>
+          <option value="lognorm">Lognormal · rechazada en los 15</option>
         </select>
       </div>
 
@@ -294,11 +294,15 @@ tbody tr:last-child td{border-bottom:none}
            log-logística, <code>x = s · (u/(1−u))^(1/c)</code> con <code>u</code> uniforme en (0,1).
            Los parámetros por defecto son los estimados por máxima verosimilitud sobre los datos
            reales de SPADIES, y se pueden editar.</p>
-        <p>El ajuste se hizo sobre 289 IES colombianas, resumidas por la mediana de sus 15 años
-           para eliminar la dependencia entre observaciones de una misma institución
-           (ICC = 0,553). La lognormal se incluye aunque quedó <strong>rechazada</strong>
-           (Anderson–Darling, p = 0,006): sirve para ver en qué se equivoca, sobre todo en el pico
-           y en la cola alta.</p>
+        <p>Las familias se probaron sobre los <strong>cortes transversales anuales</strong>, donde
+           cada institución aparece una sola vez y no hay medidas repetidas: n ≈ 265 por año. La
+           log-Laplace no se rechaza en 12 de los 15 años; la log-logística, en 5; la lognormal, en
+           ninguno. Se incluye igual porque sirve para ver en qué se equivoca, sobre todo en el
+           pico y en la cola alta.</p>
+        <p><strong>Dos advertencias.</strong> Todas las cifras son por institución, nunca por
+           estudiante: el archivo trae tasas, no matrículas. Y 22 de las 289 IES dejan de aparecer
+           antes de 2024 con una deserción mediana 2,6 veces mayor que las que permanecen, así que
+           parte del descenso observado es composición de la muestra y no mejora.</p>
       </section>
     </main>
   </div>
@@ -339,7 +343,7 @@ const FAMILIAS = {
     inv:(u,p)=> p.s*Math.pow(u/(1-u),1/p.c),
     pdf:(x,p)=>{ const y=Math.pow(x/p.s,p.c); return (p.c/p.s)*Math.pow(x/p.s,p.c-1)/Math.pow(1+y,2); },
     cdf:(x,p)=> 1/(1+Math.pow(x/p.s,-p.c)),
-    nota:"Gana el ajuste con 2 parámetros y no se rechaza (p = 0,140). Su cola decae como una potencia de exponente c."
+    nota:"Probada año por año, resiste en 5 de 15 cortes. Fue la recomendación inicial del estudio, sobre una muestra mal planteada. Su ventaja: es suave, sin el pico anguloso de la log-Laplace."
   },
   burr12:{
     nombre:"Burr XII",
@@ -348,7 +352,7 @@ const FAMILIAS = {
     pdf:(x,p)=>{ const y=Math.pow(x/p.s,p.c);
       return (p.c*p.d/p.s)*Math.pow(x/p.s,p.c-1)*Math.pow(1+y,-p.d-1); },
     cdf:(x,p)=> 1-Math.pow(1+Math.pow(x/p.s,p.c),-p.d),
-    nota:"El p-valor más alto de todo el catálogo (0,440), pero gasta 3 parámetros para ganarlo."
+    nota:"Resiste en 7 de 15 años usando 3 parámetros. Más flexible, pero esa flexibilidad no se traduce en un ajuste consistente."
   },
   loglaplace:{
     nombre:"Log-Laplace",
@@ -357,7 +361,7 @@ const FAMILIAS = {
     pdf:(x,p)=>{ const y=x/p.s;
       return (p.c/(2*p.s))*(y<1 ? Math.pow(y,p.c-1) : Math.pow(y,-p.c-1)); },
     cdf:(x,p)=>{ const y=x/p.s; return y<1 ? 0.5*Math.pow(y,p.c) : 1-0.5*Math.pow(y,-p.c); },
-    nota:"Gana en 9 de los 15 años por separado. Tiene un pico anguloso en la moda: mírelo en el histograma."
+    nota:"La que resiste la prueba año por año: no se rechaza en 12 de 15 cortes (p mediano 0,150). Su punto débil es la forma: tiene un pico anguloso en la moda. Mírelo en el histograma."
   },
   lognorm:{
     nombre:"Lognormal",
@@ -366,7 +370,7 @@ const FAMILIAS = {
     pdf:(x,p)=>{ const l=Math.log(x/p.s);
       return Math.exp(-l*l/(2*p.sigma*p.sigma))/(x*p.sigma*Math.sqrt(2*Math.PI)); },
     cdf:(x,p)=>{ const z=Math.log(x/p.s)/p.sigma; return 0.5*(1+erf(z/Math.SQRT2)); },
-    nota:"Rechazada por Anderson–Darling (p = 0,006): el log de los datos es simétrico pero tiene colas demasiado pesadas para una normal."
+    nota:"Rechazada en los 15 años, con el p-valor en el mínimo alcanzable. El log de los datos es casi simétrico, pero con colas demasiado pesadas para una normal."
   }
 };
 function erf(x){

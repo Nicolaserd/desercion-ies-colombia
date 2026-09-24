@@ -14,9 +14,16 @@ paneles sintéticos a partir del modelo ajustado.
 
 **La distribución no es lognormal.** La intuición de trabajar en escala
 logarítmica es correcta —la asimetría pasa de +3,06 a +0,17— pero el log no es
-normal: es leptocúrtico, con colas más pesadas. La lognormal queda rechazada por
-Anderson–Darling con p-valores por Monte Carlo (p = 0,006). La familia que sí
-ajusta es la **log-logística (Fisk)**, la lognormal con colas pesadas.
+normal: es leptocúrtico, con colas más pesadas. La lognormal se rechaza por
+Anderson–Darling **en los quince años**, con el p-valor en el mínimo alcanzable.
+Lo mismo la gamma y la Weibull.
+
+**La familia que ajusta es la log-Laplace.** Probadas año por año sobre cortes
+transversales —donde cada institución aparece una sola vez y no hay medidas
+repetidas—, la log-Laplace no se rechaza en **12 de 15 años** (p mediano 0,150),
+la Burr XII en 7 y la log-logística en 5. El resultado se confirma fuera de
+muestra partiendo las instituciones en dos mitades: p = 0,464 en la mitad que no
+participó en la elección.
 
 **No es una ley de potencias.** La Pareto pura queda penúltima de 13 familias
 (ΔAIC = 181), la cola empírica cubre menos de una década cuando el criterio de
@@ -37,8 +44,16 @@ persistente, r(h) = λ + (1−λ)·ρ^h, con λ = 0,540 y ρ = 0,465 — un erro
 cuadrático 76 veces menor que el del modelo geométrico.
 
 **La institución pesa veinte veces más que el año.** En la descomposición de la
-varianza de log(tasa): el año explica el 3,1%, la institución el 58,5%, el
-residuo idiosincrásico el 38,6%.
+varianza de log(tasa), con sumas de cuadrados tipo II: el año explica el 3,1%, la
+institución el 58,5%, el residuo idiosincrásico el 38,5%, y el solapamiento entre
+los dos efectos es de 0,01% — son prácticamente ortogonales.
+
+**Hay atrición selectiva, y compromete la lectura del descenso.** De las 289
+instituciones, 22 dejan de aparecer antes de 2024, y su deserción mediana es
+**2,6 veces** la de las que permanecen (29,6% contra 11,3%, Mann-Whitney
+p < 0,0001). Parte de la caída de la mediana del sistema —de 14,0% a 9,7%— es
+composición de la muestra, no mejora. Con este archivo no se pueden separar
+ambas causas.
 
 ---
 
@@ -66,6 +81,13 @@ residuo idiosincrásico el 38,6%.
 4. **Estructura de dependencia** — Markov contra AR(1) contra componentes de
    varianza, matriz de transición entre quintiles, y patrones de movilidad y
    trayectoria.
+5. **Auditoría crítica** — ataca las conclusiones de las partes anteriores. Dos
+   no sobreviven: el diseño de la inferencia de la parte 2 estaba mal planteado
+   (resumir por medianas mezcla quince años con escalas distintas en lugar de
+   usar el corte anual, que ya es independiente), lo que invierte el ganador; y
+   la atrición selectiva matiza el descenso de la parte 1. Incluye validación
+   fuera de muestra, intervalos de confianza por bootstrap, sensibilidad a los
+   extremos excluidos y descomposición de varianza tipo II.
 
 ### Los simuladores
 
@@ -113,16 +135,30 @@ Monte Carlo y el bootstrap de la ley de potencias son la parte costosa.
 
 ## Advertencias de método
 
+- **Todas las cifras son por institución, nunca por estudiante.** El archivo trae
+  tasas, no matrículas: una IES de 50 estudiantes pesa lo mismo que una de
+  50.000. "La mediana es 9,7%" significa *la institución mediana tiene 9,7%*, no
+  *el 9,7% de los estudiantes deserta*.
+- **Atrición selectiva.** Las 22 instituciones que salen del panel tienen 2,6
+  veces más deserción que las que permanecen. El descenso observado mezcla mejora
+  real con cambio de composición, y este archivo no permite separarlos.
 - Se excluye el 1,3% de observaciones con tasas de 0% o 100% exactos: la familia
-  log- no está definida en 0. Son instituciones de cohorte mínima. Un modelo
-  completo del sistema sería mixto: masa puntual en los bordes más log-logística
-  en el interior.
-- Los p-valores calculados sobre las 3.930 filas no son interpretables por la
-  dependencia intra-institución. El cuaderno los reporta solo para mostrar que
-  el contraste agrupado rechaza todo por construcción.
-- Distinguir log-logística de log-Laplace con 289 observaciones es exigirle
-  mucho a los datos (ΔAIC = 3,8). Lo robusto es la familia, no la ganadora
-  exacta.
+  log- no está definida en 0. Son instituciones de cohorte mínima. La ganadora no
+  cambia al incluirlas desplazadas, pero sí cambian las distancias entre las
+  demás. Un modelo completo sería mixto: masa puntual en los bordes más
+  log-Laplace en el interior.
+- Los p-valores calculados sobre las 3.930 filas agrupadas no son interpretables
+  por la dependencia intra-institución (ICC = 0,553, n efectivo ≈ 494). El
+  cuaderno los reporta solo para mostrar que el contraste agrupado rechaza todo
+  por construcción.
+- **Los intervalos son anchos.** La forma de la log-Laplace en 2024 es 2,04 con
+  IC95% [1,83, 2,34]; la de la log-logística, 2,82 con [2,48, 3,19]. Con ~265
+  instituciones no se afina más: diferencias dentro de ese margen son ruido.
+- La log-Laplace ajusta mejor pero tiene un pico anguloso en la moda —su densidad
+  no es derivable ahí—, lo que es incómodo como modelo generativo. La
+  log-logística es más suave y en varios años la diferencia cabe dentro del
+  intervalo de confianza. Lo robusto es la familia log- de colas pesadas, no la
+  ganadora exacta.
 - El modelo dice cuánta variación es institucional, no por qué. El paso
   siguiente es explicar el efecto institución con covariables: tamaño de
   cohorte, carácter público o privado, región, nivel de formación.

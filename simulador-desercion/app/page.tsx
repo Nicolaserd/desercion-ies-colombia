@@ -13,11 +13,11 @@ export default function Page() {
       </header>
       <Simulador />
       <footer className="pie">
-        Parámetros estimados por máxima verosimilitud sobre 289 IES colombianas
-        (SPADIES, 3.930 observaciones institución-año). La log-logística encabeza
-        el ranking por AIC entre 13 familias y no es rechazada por Anderson–Darling
-        (p = 0,140); la lognormal, con los mismos dos parámetros, sí lo es
-        (p = 0,006).
+        Parámetros estimados por máxima verosimilitud sobre cortes transversales
+        anuales de IES colombianas (SPADIES). Probadas año por año, la log-Laplace
+        no se rechaza en 12 de los 15 años (p mediano 0,150); la log-logística, en
+        5; la lognormal, en ninguno. Todas las cifras son por institución, nunca
+        por estudiante: el archivo no trae matrículas.
       </footer>
     </main>
   );

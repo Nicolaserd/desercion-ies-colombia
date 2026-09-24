@@ -15,7 +15,10 @@ const INICIAL: Estado = {
   nIes: 289,
   nAnios: 15,
   semilla: "spadies-2024",
-  familia: "fisk",
+  // La auditoría (parte 5 del cuaderno) invirtió la recomendación: sobre cortes
+  // transversales anuales, la log-Laplace no se rechaza en 12 de 15 años; la
+  // log-logística, solo en 5.
+  familia: "loglaplace",
   icc: AJUSTES.dependencia.lambda,
   rho: AJUSTES.dependencia.rho,
   truncar: true,
@@ -157,11 +160,27 @@ export default function Simulador() {
         <h2>{ficha.nombre}</h2>
         <p>{ficha.nota}</p>
         <p>
-          <b>ΔAIC {numero(ficha.dAIC, 1)}</b> frente a la mejor del catálogo ·
-          Anderson–Darling por Monte Carlo <b>p = {numero(ficha.pAD, 3)}</b> ·{" "}
-          {ficha.estado === "rechazada"
-            ? "rechazada al 5%"
-            : "compatible con los datos"}
+          Probada sobre los 15 cortes transversales anuales:{" "}
+          <b>
+            no se rechaza en {ficha.aniosSinRechazo} de 15 años
+          </b>{" "}
+          (Anderson–Darling por Monte Carlo, p mediano{" "}
+          <b>{numero(ficha.pMediano, 3)}</b>).
+        </p>
+        <p>
+          Advertencia sobre los datos: {AJUSTES.auditoria.atricion.iesQueSalen}{" "}
+          instituciones dejan de aparecer antes de 2024, y su deserción mediana
+          es{" "}
+          <b>
+            {(
+              AJUSTES.auditoria.atricion.medianaSalen /
+              AJUSTES.auditoria.atricion.medianaSiguen
+            ).toFixed(1)}
+            ×
+          </b>{" "}
+          la de las que permanecen. Parte del descenso observado es composición
+          de la muestra, no mejora. Y todas las cifras son por institución, nunca
+          por estudiante: el archivo no trae matrículas.
         </p>
         <p>
           La dependencia entre años <b>no es markoviana</b>. Se modela con dos

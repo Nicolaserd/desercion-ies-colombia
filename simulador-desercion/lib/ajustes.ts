@@ -27,11 +27,24 @@ export interface AjusteAnio {
 export interface FichaFamilia {
   clave: Familia;
   nombre: string;
-  dAIC: number;
-  pAD: number;
-  estado: "compatible" | "rechazada";
+  /** Años, de 15, en que Anderson-Darling no la rechaza al 5%. */
+  aniosSinRechazo: number;
+  /** Mediana de los 15 p-valores anuales. */
+  pMediano: number;
+  estado: "compatible" | "limitada" | "rechazada";
   campos: [string, string][];
   nota: string;
+}
+
+export interface Auditoria {
+  disenio: string;
+  atricion: {
+    iesQueSalen: number;
+    medianaSalen: number;
+    medianaSiguen: number;
+    p: number;
+  };
+  ic2024: { loglaplaceC: [number, number]; fiskC: [number, number] };
 }
 
 export interface Dependencia {
@@ -56,6 +69,7 @@ export interface Ajustes {
   };
   familias: FichaFamilia[];
   dependencia: Dependencia;
+  auditoria: Auditoria;
 }
 
 export const AJUSTES = bruto as unknown as Ajustes;
