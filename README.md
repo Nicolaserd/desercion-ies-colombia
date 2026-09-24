@@ -28,6 +28,21 @@ participó en la elección.
 Dicho con precisión: **falla en 3 años, más de lo que el azar explica** (binomial
 p = 0,036). Es la mejor de las trece probadas, no la correcta.
 
+**Ampliado a 43 familias, no hay un único ganador: hay uno por criterio.** Johnson
+SU encabeza el AICc y la bondad de ajuste (13 de 15 años), pero usa 4 parámetros y
+asigna 0,36% de probabilidad a tasas negativas. La **Burr XII es la que mejor
+reproduce la dispersión** —el criterio que corresponde a esta pregunta— con 0,667
+frente a 0,466 de la log-Laplace. Y el **diagrama de razones de momentos-L**, que
+no ajusta ningún modelo y es robusto a atípicos, sitúa la curtosis-L del log en
+0,2198: Laplace (0,2357) queda a 0,016, la logística (0,1667) a 0,053 y la normal
+(0,1226) a 0,097, fuera del intervalo bootstrap.
+
+**Respetar el soporte [0,1] sale demasiado caro.** Johnson SB y Beta, las dos
+únicas familias acotadas por construcción —lo teóricamente correcto para una
+proporción—, se rechazan en los quince años y son las peores en dispersión. La
+cola derecha de estos datos es más pesada que lo que una familia acotada de dos
+parámetros puede producir.
+
 **No es una ley de potencias.** La Pareto pura queda penúltima de 13 familias
 (ΔAIC = 181), la cola empírica cubre menos de una década cuando el criterio de
 Clauset–Shalizi–Newman pide al menos dos, y el cuerpo de la distribución tiene
@@ -102,6 +117,11 @@ ambas causas.
    de Markov sobre quintiles tiene sesgo hacia el rechazo y que la evidencia real
    es la forma de la autocorrelación, y valida el simulador contra los datos
    (KS de dos muestras, p = 0,725).
+7. **Catálogo ampliado** — 43 familias y cuatro criterios de selección en lugar
+   de uno: AICc, verosimilitud predictiva por validación cruzada, chequeo
+   predictivo sobre estadísticos de dispersión, y el diagrama de razones de
+   momentos-L. Cada criterio nombra un ganador distinto, y esa discrepancia es
+   la respuesta.
 
 Que la segunda ronda no revierta nada es la señal de que el estudio convergió: la
 primera encontró errores de diseño, la segunda solo límites de precisión.
